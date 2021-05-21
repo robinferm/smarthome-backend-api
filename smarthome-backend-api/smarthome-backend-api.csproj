@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BLL\smarthome-backend-api.BLL.csproj" />
+    <ProjectReference Include="..\smarthome-backend-api.BLL\smarthome-backend-api.BLL.csproj" />
   </ItemGroup>
 
 </Project>
