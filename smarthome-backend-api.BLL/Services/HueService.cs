@@ -3,6 +3,7 @@ using smarthome_backend_api.BLL.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -43,38 +44,32 @@ namespace smarthome_backend_api.BLL.Services
             return result;
         }
 
-        public async Task<Light> TurnOff(int id)
+        public async Task<HttpStatusCode> TurnOff(int id)
         {
             string url = _baseURL + _username + $"/lights/{id}/state";
-            HttpContent test = new StringContent("{\"on\":false}", Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PutAsync(url, test);
+            HttpContent content = new StringContent("{\"on\":false}", Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PutAsync(url, content);
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException(response.ReasonPhrase);
             }
 
-            string stringResponse = await response.Content.ReadAsStringAsync();
-            Light result = JsonSerializer.Deserialize<Light>(stringResponse);
-
-            return result;
+            return response.StatusCode;
         }
 
-        public async Task<Light> TurnOn(int id)
+        public async Task<HttpStatusCode> TurnOn(int id)
         {
             string url = _baseURL + _username + $"/lights/{id}/state";
-            HttpContent test = new StringContent("{\"on\":true}", Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PutAsync(url, test);
+            HttpContent content = new StringContent("{\"on\":true}", Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PutAsync(url, content);
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException(response.ReasonPhrase);
             }
 
-            string stringResponse = await response.Content.ReadAsStringAsync();
-            Light result = JsonSerializer.Deserialize<Light>(stringResponse);
-
-            return result;
+            return response.StatusCode;
         }
     }
 }

@@ -3,6 +3,7 @@ using smarthome_backend_api.BLL.Models;
 using smarthome_backend_api.BLL.Services;
 using smarthome_backend_api.BLL.Services.Interfaces;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -28,14 +29,14 @@ namespace smarthome_backend_api.Controllers
 
         [HttpPut]
         [Route("TurnOn")]
-        public async Task<Light> TurnOn(int id)
+        public async Task<HttpStatusCode> TurnOn(int id)
         {
             return await _hueService.TurnOn(id);
         }
 
         [HttpPut]
         [Route("TurnOff")]
-        public async Task<Light> TurnOff(int id)
+        public async Task<HttpStatusCode> TurnOff(int id)
         {
             return await _hueService.TurnOff(id);
         }
