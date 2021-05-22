@@ -27,7 +27,7 @@ namespace smarthome_backend_api.BLL.Services
             _baseURL = Environment.GetEnvironmentVariable("hue-url");
         }
 
-        public async Task<Dictionary<string, Id>> GetScenes()
+        public async Task<Dictionary<string, Scene>> GetAllScenes()
         {
             string url = _baseURL + _username + "/scenes";
             HttpResponseMessage response = await _client.GetAsync(url);
@@ -38,8 +38,7 @@ namespace smarthome_backend_api.BLL.Services
             }
 
             string stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Dictionary<string, Id>>(stringResponse);
-            
+            var result = JsonSerializer.Deserialize<Dictionary<string, Scene>>(stringResponse);
 
             return result;
         }

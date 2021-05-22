@@ -5,7 +5,6 @@ using smarthome_backend_api.BLL.Services.Interfaces;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static smarthome_backend_api.BLL.Models.Scene;
 
 namespace smarthome_backend_api.Controllers
 {
@@ -21,10 +20,10 @@ namespace smarthome_backend_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetScenes")]
-        public async Task<Dictionary<string, Id>> GetScenes()
+        [Route("GetAllScenes")]
+        public async Task<Dictionary<string, Scene>> GetAllScenes()
         {
-            return await _hueService.GetScenes();
+            return await _hueService.GetAllScenes();
         }
 
         [HttpPut]
