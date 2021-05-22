@@ -21,21 +21,21 @@ namespace smarthome_backend_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllScenes")]
+        [Route("scenes")]
         public async Task<Dictionary<string, Scene>> GetAllScenes()
         {
             return await _hueService.GetAllScenes();
         }
 
         [HttpPut]
-        [Route("TurnOn")]
+        [Route("{id:int}/on")]
         public async Task<HttpStatusCode> TurnOn(int id)
         {
             return await _hueService.TurnOn(id);
         }
 
         [HttpPut]
-        [Route("TurnOff")]
+        [Route("{id:int}/off")]
         public async Task<HttpStatusCode> TurnOff(int id)
         {
             return await _hueService.TurnOff(id);
