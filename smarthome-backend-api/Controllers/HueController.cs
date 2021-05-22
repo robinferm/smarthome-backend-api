@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using smarthome_backend_api.BLL.Models;
 using smarthome_backend_api.BLL.Services;
+using smarthome_backend_api.BLL.Services.Interfaces;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using static smarthome_backend_api.BLL.Models.Scene;
 
 namespace smarthome_backend_api.Controllers
 {
@@ -9,24 +13,32 @@ namespace smarthome_backend_api.Controllers
     [ApiController]
     public class HueController : ControllerBase
     {
-        [HttpGet]
-        public async Task<Light> GetLights()
+        private readonly IHueService _hueService;
+        
+        public HueController(IHueService hueService)
         {
-            Light lights;
-            using (HueService hue = new HueService())
-            {
-                lights = await hue.GetLights();
-            }
-            return lights;
+            _hueService = hueService;
+        }
+
+        [HttpGet]
+        [Route("GetScenes")]
+        public async Task<Dictionary<string, Id>> GetScenes()
+        {
+            return await _hueService.GetScenes();
         }
 
         [HttpPut]
-        public async Task<LightState> TurnOn(int id)
+        [Route("TurnOn")]
+        public async Task<Light> TurnOn(int id)
         {
-            using (HueService hue = new HueService())
-            {
-                return await hue.TurnOn(id);
-            }
+            return await _hueService.TurnOn(id);
+        }
+
+        [HttpPut]
+        [Route("TurnOff")]
+        public async Task<Light> TurnOff(int id)
+        {
+            return await _hueService.TurnOff(id);
         }
     }
 }

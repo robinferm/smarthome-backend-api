@@ -1,6 +1,8 @@
 ﻿using smarthome_backend_api.BLL.Models;
 using smarthome_backend_api.BLL.Services.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -8,73 +10,70 @@ using System.Threading.Tasks;
 
 namespace smarthome_backend_api.BLL.Services
 {
-    public class HueService : IHueService, IDisposable
+    public class HueService : IHueService
     {
-        static HttpClientHandler clientHandler = new HttpClientHandler()
+        private static HttpClientHandler _clientHandler = new HttpClientHandler()
         {
             ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
         };
 
-        private readonly HttpClient _client = new HttpClient(clientHandler);
+        private readonly HttpClient _client = new HttpClient(_clientHandler);
+        private readonly string _username;
+        private readonly string _baseURL;
 
-        public void Dispose()
+        public HueService()
         {
+            _username = Environment.GetEnvironmentVariable("hue-username");
+            _baseURL = Environment.GetEnvironmentVariable("hue-url");
         }
 
-        public async Task<Light> GetLights()
+        public async Task<Dictionary<string, Id>> GetScenes()
         {
-            var username = Environment.GetEnvironmentVariable("hue-username");
-            var baseurl = Environment.GetEnvironmentVariable("hue-url");
-            var url = baseurl + username + "/lights/6";
-            var result = new Light();
-            var response = await _client.GetAsync(url);
+            string url = _baseURL + _username + "/scenes";
+            HttpResponseMessage response = await _client.GetAsync(url);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var stringResponse = await response.Content.ReadAsStringAsync();
-
-
-
-                //result = JsonSerializer.Deserialize<List<Rootobject>>(stringResponse);
-                //result = JObject.Parse(stringResponse);
-
-                result = JsonSerializer.Deserialize<Light>(stringResponse,
-                    new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException(response.ReasonPhrase);
             }
+
+            string stringResponse = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Dictionary<string, Id>>(stringResponse);
+            
 
             return result;
         }
 
-        public async Task<LightState> TurnOn(int id)
+        public async Task<Light> TurnOff(int id)
         {
-            var username = Environment.GetEnvironmentVariable("hue-username");
-            var baseurl = Environment.GetEnvironmentVariable("hue-url");
-            var url = baseurl + username + $"/lights/{id}/state";
-
-            var result = new LightState();
+            string url = _baseURL + _username + $"/lights/{id}/state";
             HttpContent test = new StringContent("{\"on\":false}", Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync(url, test);
+            HttpResponseMessage response = await _client.PutAsync(url, test);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var stringResponse = await response.Content.ReadAsStringAsync();
-
-
-
-                //result = JsonSerializer.Deserialize<List<Rootobject>>(stringResponse);
-                //result = JObject.Parse(stringResponse);
-
-                result = JsonSerializer.Deserialize<LightState>(stringResponse,
-                    new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException(response.ReasonPhrase);
             }
+
+            string stringResponse = await response.Content.ReadAsStringAsync();
+            Light result = JsonSerializer.Deserialize<Light>(stringResponse);
+
+            return result;
+        }
+
+        public async Task<Light> TurnOn(int id)
+        {
+            string url = _baseURL + _username + $"/lights/{id}/state";
+            HttpContent test = new StringContent("{\"on\":true}", Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PutAsync(url, test);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(response.ReasonPhrase);
+            }
+
+            string stringResponse = await response.Content.ReadAsStringAsync();
+            Light result = JsonSerializer.Deserialize<Light>(stringResponse);
 
             return result;
         }

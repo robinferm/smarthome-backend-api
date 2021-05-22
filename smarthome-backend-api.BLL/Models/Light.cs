@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace smarthome_backend_api.BLL.Models
 {
 
     public class Light
     {
-        public State State { get; set; }
+        public State state { get; set; }
         public Swupdate swupdate { get; set; }
         public string type { get; set; }
         public string name { get; set; }

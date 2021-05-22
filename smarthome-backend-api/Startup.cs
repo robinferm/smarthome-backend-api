@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using smarthome_backend_api.BLL.Services;
+using smarthome_backend_api.BLL.Services.Interfaces;
 
 namespace smarthome_backend_api
 {
@@ -25,6 +27,7 @@ namespace smarthome_backend_api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "smarthome_backend_api", Version = "v1" });
             });
+            services.AddTransient<IHueService, HueService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
