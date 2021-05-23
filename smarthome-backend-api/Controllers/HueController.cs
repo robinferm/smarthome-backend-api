@@ -27,6 +27,13 @@ namespace smarthome_backend_api.Controllers
             return await _hueService.GetAllScenes();
         }
 
+        [HttpGet]
+        [Route("groups")]
+        public async Task<Dictionary<string, Group>> GetAllGroups()
+        {
+            return await _hueService.GetAllGroups();
+        }
+
         [HttpPut]
         [Route("{id:int}/on")]
         public async Task<HttpStatusCode> TurnOn(int id)
@@ -39,6 +46,13 @@ namespace smarthome_backend_api.Controllers
         public async Task<HttpStatusCode> TurnOff(int id)
         {
             return await _hueService.TurnOff(id);
+        }
+
+        [HttpPut]
+        [Route("{id:int}/test")]
+        public async Task<HttpStatusCode> SetScene(int id, string sceneId)
+        {
+            return await _hueService.SetScene(id, sceneId);
         }
     }
 }

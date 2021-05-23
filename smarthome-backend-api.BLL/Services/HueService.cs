@@ -24,6 +24,22 @@ namespace smarthome_backend_api.BLL.Services
             _client = client;
         }
 
+        public async Task<Dictionary<string, Group>> GetAllGroups()
+        {
+            string url = _baseURL + _username + "/groups";
+            HttpResponseMessage response = await _client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(response.ReasonPhrase);
+            }
+
+            string stringResponse = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<Dictionary<string, Group>>(stringResponse);
+
+            return result;
+        }
+
         public async Task<Dictionary<string, Scene>> GetAllScenes()
         {
             string url = _baseURL + _username + "/scenes";
@@ -38,6 +54,11 @@ namespace smarthome_backend_api.BLL.Services
             var result = JsonSerializer.Deserialize<Dictionary<string, Scene>>(stringResponse);
 
             return result;
+        }
+
+        public async Task<HttpStatusCode> SetScene(int id, string sceneId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<HttpStatusCode> TurnOff(int id)
