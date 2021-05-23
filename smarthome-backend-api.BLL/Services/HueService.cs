@@ -13,19 +13,15 @@ namespace smarthome_backend_api.BLL.Services
 {
     public class HueService : IHueService
     {
-        private static HttpClientHandler _clientHandler = new HttpClientHandler()
-        {
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
-        };
-
-        private readonly HttpClient _client = new HttpClient(_clientHandler);
+        private readonly HttpClient _client;
         private readonly string _username;
         private readonly string _baseURL;
 
-        public HueService()
+        public HueService(HttpClient client)
         {
             _username = Environment.GetEnvironmentVariable("hue-username");
             _baseURL = Environment.GetEnvironmentVariable("hue-url");
+            _client = client;
         }
 
         public async Task<Dictionary<string, Scene>> GetAllScenes()

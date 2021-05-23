@@ -14,7 +14,7 @@ namespace smarthome_backend_api.Controllers
     public class HueController : ControllerBase
     {
         private readonly IHueService _hueService;
-        
+
         public HueController(IHueService hueService)
         {
             _hueService = hueService;
